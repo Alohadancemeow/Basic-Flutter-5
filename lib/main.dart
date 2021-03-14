@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:register_form_app/pages/registration_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,11 +31,31 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Container(),
-    );
+    // ! Tab Controller
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          backgroundColor: Colors.blue,
+
+          // ! TabBarView - show tab's contents
+          body: TabBarView(
+            children: [
+              RegistrationPage(),
+              Container(),
+            ],
+          ),
+
+          // ! BottomMenu - Tabs
+          bottomNavigationBar: TabBar(
+            tabs: [
+              Tab(
+                text: 'Register',
+              ),
+              Tab(
+                text: 'User list',
+              )
+            ],
+          ),
+        ));
   }
 }
