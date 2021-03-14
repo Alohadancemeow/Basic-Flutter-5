@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:register_form_app/pages/registration_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,33 +30,64 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // ! Field variables
+  final Future<FirebaseApp> _initializztion = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
-    // ! Tab Controller
-    return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          backgroundColor: Colors.blue,
+    return FutureBuilder(
+      future: _initializztion,
+      builder: (context, snapshot) {
+        //show error
+        if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Oooops...'),
+            ),
+            body: Center(
+              child: Text('${snapshot.error}'),
+            ),
+          );
+        }
 
-          // ! TabBarView - show tab's contents
-          body: TabBarView(
-            children: [
-              RegistrationPage(),
-              Container(),
-            ],
-          ),
+        //show page
+        if (snapshot.connectionState == ConnectionState.done) {
+          // ! Tab Controller
+          return DefaultTabController(
+              length: 2,
+              child: Scaffold(
+                backgroundColor: Colors.blue,
 
-          // ! BottomMenu - Tabs
-          bottomNavigationBar: TabBar(
-            tabs: [
-              Tab(
-                text: 'Register',
-              ),
-              Tab(
-                text: 'User list',
-              )
-            ],
+                // ! TabBarView - show tab's contents
+                body: TabBarView(
+                  children: [
+                    RegistrationPage(),
+                    Container(),
+                  ],
+                ),
+
+                // ! BottomMenu - Tabs
+                bottomNavigationBar: TabBar(
+                  tabs: [
+                    Tab(
+                      text: 'Register',
+                    ),
+                    Tab(
+                      text: 'User list',
+                    )
+                  ],
+                ),
+              ));
+        }
+
+        //show loading..
+        return Scaffold(
+          appBar: AppBar(),
+          body: Center(
+            child: CircularProgressIndicator(),
           ),
-        ));
+        );
+      },
+    );
   }
 }
